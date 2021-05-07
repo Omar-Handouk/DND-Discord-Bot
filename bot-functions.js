@@ -11,7 +11,7 @@ const BOT_PREFIX = "-dnd";
 
 module.exports = async (Discord, client, DB) => {
   // -------------------------------------------------------------------
-  const showHelp = async (msg) => {
+  const showHelp = async msg => {
     const help = new Discord.MessageEmbed();
 
     help
@@ -42,7 +42,7 @@ module.exports = async (Discord, client, DB) => {
 
     msg.channel.send(help);
   };
-  
+
   const checkIfUserExists = async username => {
     let query = DB.collection("users").where("username", "==", username);
 
@@ -50,46 +50,90 @@ module.exports = async (Discord, client, DB) => {
 
     return snapshot.empty;
   };
-  
+
   const getID = async (msg, username) => {
-    const collectionRef = DB.collection("users");
-    
-    const query = await collectionRef.where("username", "==", username.toLowerCase()).get();
-    
-    if (query.empty) {
+    const doc = await getUser(msg, username);
+
+    if (!doc.found) {
       msg.channel.send("Username not found!");
+      return Promise.resolve({ found: false });
     } else {
-      msg.channel.send(`The ID of username ${username}: ${query.docs[0].data()._id}`)
+      msg.channel.send(`The ID of username ${username}: ${doc._id}`);
+
+      return Promise.resolve(doc._id);
     }
   };
-  
+
   const addUser = async (msg, username) => {
     const docRef = DB.collection("users").doc();
 
-          await docRef.set({
-            username: `${username.toLowerCase()}`,
-            level: 0,
-            progress: 0.0
-          });
-    
-          await docRef.set({
-            _id: docRef.id
-          }, {merge: true});
-    
-          msg.channel.send(
-            `User has been added successfully, User ID: ${docRef.id}`
-          );
+    await docRef.set({
+      username: `${username.toLowerCase()}`,
+      level: 0,
+      progress: 0.0
+    });
+
+    await docRef.set(
+      {
+        _id: docRef.id
+      },
+      { merge: true }
+    );
+
+    msg.channel.send(`User has been added successfully, User ID: ${docRef.id}`);
   };
-  
-  const getAllUser = async (msg) => {};
-  
-  const getUser = async (msg, user, isUserID) => {
-    const doc 
+
+  const getAllUser = async msg => {};
+
+  const getUser = async (msg, username) => {
+    const collectionRef = DB.collection("users");
+
+    const query = await collectionRef
+      .where("username", "==", username.toLowerCase())
+      .get();
+
+    if (query.empty) {
+      msg.channel.send("Username not found!");
+      return Promise.resolve({ found: false });
+    } else {
+      const profile = query.docs[0].data();
+      const usrID = profile._id;
+      const usrname = profile.username;
+      const usrLevel = profile.level;
+      const usrProgress = profile.progress;
+
+      const information = new Discord.MessageEmbed();
+
+      information
+        .setColor("#0099ff")
+        .setTitle(`User Information: ${usrname}`)
+        .addFields(
+          { name: "ID", value: usrID },
+          {
+            name: "Username",
+            value: usrname
+          },
+          {
+            name: "Level",
+            value: usrLevel
+          },
+          {
+            name: "Progress",
+            value: usrProgress
+          }
+        );
+
+      msg.channel.send(information);
+
+      profile.found = true;
+
+      return Promise.resolve(profile);
+    }
   };
-  
-  const updateUser = async (msg, user, isUserID) => {};
-  
-  const deleteUser = async (msg, user, isUserID) => {};
+
+  const updateUser = async (msg, user) => {};
+
+  const deleteUser = async (msg, user) => {};
   // -------------------------------------------------------------------
 
   client.on("ready", () => {
@@ -107,7 +151,7 @@ module.exports = async (Discord, client, DB) => {
       case `info`:
         break;
       case `userid`:
-        await getID(msg, msgSplit[2])
+        await getID(msg, msgSplit[2]);
         break;
       case `add`:
         if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
@@ -115,8 +159,10 @@ module.exports = async (Discord, client, DB) => {
         } else {
           await addUser(msg, msgSplit[2]);
         }
-        
+
         break;
+      case `getuser`:
+        await getUser(msg, msgSplit[2]);
       case `update`:
         break;
       case `delete`:
