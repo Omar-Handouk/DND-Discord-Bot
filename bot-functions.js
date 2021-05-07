@@ -161,7 +161,9 @@ module.exports = async (Discord, client, DB) => {
         await getID(msg, msgSplit[2]);
         break;
       case `add`:
-        if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
+        if (!msgSplit[2]) {
+          msg.channel.send("You must pass a username!");
+        } else if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
           msg.channel.send("User already exists");
         } else {
           await addUser(msg, msgSplit[2]);
