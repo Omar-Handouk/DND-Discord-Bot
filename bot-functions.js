@@ -52,7 +52,13 @@ module.exports = async (Discord, client, DB) => {
   };
   
   const getID = async (msg, username) => {
+    const collectionRef = DB.collection("users");
     
+    const querySnapshot = await collectionRef.where("username", "==", username.toLowerCase()).get();
+    
+    querySnapshot.forEach(documentSnapshot => {
+      console.log(documentSnapshot.);
+    })
   };
   
   const addUser = async (msg, username) => {
@@ -71,7 +77,7 @@ module.exports = async (Discord, client, DB) => {
   
   const getAllUser = async (msg) => {};
   
-  const getUser = async (msg, user)
+  const getUser = async (msg, user) => {};
   
   const updateUser = async (msg, user) => {};
   
@@ -91,6 +97,9 @@ module.exports = async (Discord, client, DB) => {
 
     switch (msgSplit[1]) {
       case `info`:
+        break;
+      case `userid`:
+        await getID(msg, msgSplit[2])
         break;
       case `add`:
         if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
