@@ -23,7 +23,7 @@ module.exports = (client, DB) => {
     }
 
     switch (msgSplit[1]) {
-      case `db`:
+      case `info`:
         break;
       case `add`:
         const docRef = DB.collection("users").doc();
@@ -39,8 +39,14 @@ module.exports = (client, DB) => {
         break;
       case `delete`:
         break;
+      case `help`:
+        const help = "Dungeons and Dragons Bot Commands\n-------------------------------"
+          + "To use the bot pleaase prefix the commands with \"-DND\"\n"
+          + "help: Used to show the bots available commands\n"
+          + "info: Shows all the information for all current users available in the database\n"
+          + "add [username]: Adds";
       default:
-        break;
+        msg.channel.send("In-correct command, please use a valid one!");
     }
   });
 };
