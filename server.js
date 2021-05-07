@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const admin = require("firebase-admin");
 
 const client = new Discord.Client();
 
@@ -16,12 +17,26 @@ client.on("ready", () => {
 */
 
 client.on("message", msg => {
+  const msgSplit = msg.content.toLowerCase().split(" ");
   
-  switch (msg.content.toLowerCase()) {
-    case `${BOT_PREFIX} db`:
-      break;
-    case `${BOT_PREFIX} Add `
+  if (msgSplit[0] !== BOT_PREFIX) {
+    return;
   }
+  
+  switch (msgSplit[1]) {
+    case `db`:
+      break;
+    case `add`:
+      break;
+    case `update`:
+      break;
+    case `delete`:
+      break;
+    default:
+      break;
+  }
+  
+  
 });
 
 client.login(process.env.DISCORD_TOKEN);
