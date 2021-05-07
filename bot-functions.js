@@ -46,7 +46,7 @@ module.exports = async (Discord, client, DB) => {
           });
           
           
-          msg.channel.send("");
+          msg.channel.send(``);
         }
         break;
       case `update`:
