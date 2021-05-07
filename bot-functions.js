@@ -10,13 +10,42 @@ const BOT_PREFIX = "-dnd";
  */
 
 module.exports = async (Discord, client, DB) => {
-  const checkIfUserExists = async username => {
-    let query = DB.collection("users").where("username", "==", username);
+  // ------------------------------------------------------------------
 
-    let snapshot = await query.get();
+  const showHelp = async (msg) => {
+    const help = new Discord.MessageEmbed();
 
-    return snapshot.empty;
+    help
+      .setColor("#0099ff")
+      .setTitle("Dungeons And Dragons Bot Help")
+      .setDescription('To use the bot pleaase prefix the commands with "-DND"')
+      .addFields(
+        { name: "help", value: "Used to show the bots available commands" },
+        {
+          name: "info",
+          value:
+            "Shows all the information for all current users available in the database"
+        },
+        {
+          name: "add [username]",
+          value: "Adds a new user to the database"
+        },
+        {
+          name: "update [username] [field type] [value]",
+          value:
+            "Update the value of a certain attribute for a user.\nAvailable field types:\n  - level\n-  progress"
+        },
+        {
+          name: "delete [username]",
+          value: "Deletes a certain user from the database"
+        }
+      );
+
+    msg.channel.send(help);
   };
+  
+  const a
+  // -------------------------------------------------------------------
 
   client.on("ready", () => {
     console.info("Bot is online!");
@@ -33,7 +62,6 @@ module.exports = async (Discord, client, DB) => {
       case `info`:
         break;
       case `add`:
-        
         if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
           msg.channel.send("User already exists");
         } else {
@@ -44,9 +72,10 @@ module.exports = async (Discord, client, DB) => {
             level: 0,
             progress: 0.0
           });
-          
-          
-          msg.channel.send(`User has been added successfully, User ID: ${docRef.id}`);
+
+          msg.channel.send(
+            `User has been added successfully, User ID: ${docRef.id}`
+          );
         }
         break;
       case `update`:
@@ -54,37 +83,7 @@ module.exports = async (Discord, client, DB) => {
       case `delete`:
         break;
       case `help`:
-        const help = new Discord.MessageEmbed();
-
-        help
-          .setColor("#0099ff")
-          .setTitle("Dungeons And Dragons Bot Help")
-          .setDescription(
-            'To use the bot pleaase prefix the commands with "-DND"'
-          )
-          .addFields(
-            { name: "help", value: "Used to show the bots available commands" },
-            {
-              name: "info",
-              value:
-                "Shows all the information for all current users available in the database"
-            },
-            {
-              name: "add [username]",
-              value: "Adds a new user to the database"
-            },
-            {
-              name: "update [username] [field type] [value]",
-              value:
-                "Update the value of a certain attribute for a user.\nAvailable field types:\n  - level\n-  progress"
-            },
-            {
-              name: "delete [username]",
-              value: "Deletes a certain user from the database"
-            }
-          );
-
-        msg.channel.send(help);
+        await showHelp(msg);
         break;
       default:
         msg.channel.send("In-correct command, please use a valid one!");
