@@ -21,9 +21,12 @@ module.exports = async (Discord, client, DB) => {
       .addFields(
         { name: "help", value: "Used to show the bots available commands" },
         {
-          name: "info",
-          value:
-            "Shows all the information for all current users available in the database"
+          name: "getuser [username]",
+          value: "Displays all information for a given username"
+        },
+        {
+          name: "userid [username]",
+          value: "Retrieves the user id for a given username"
         },
         {
           name: "add [username]",
@@ -66,36 +69,41 @@ module.exports = async (Discord, client, DB) => {
 
   const addUser = async (msg, userInfo) => {
     const docRef = DB.collection("users").doc();
-    
+
     const usrname = userInfo[0].toLowerCase();
     const usrLevel = parseInt(userInfo[1]);
     const usrProgress = parseFloat(userInfo[2]);
-    
+
     if (isNaN(usrLevel)) {
-      
-      msg.channel.send("Undefined level value, please supply a numerical value!");
+      msg.channel.send(
+        "Undefined level value, please supply a numerical value!"
+      );
       return;
     }
-    
+
     if (usrLevel < 0) {
       msg.channel.send("Level is below zero, please supply a positive number");
       return;
     }
-    
+
     if (isNaN(usrProgress)) {
-      msg.channel.send("Undefined progress value, please supply a numerical value between 0 and 1!");
+      msg.channel.send(
+        "Undefined progress value, please supply a numerical value between 0 and 1!"
+      );
       return;
     }
-    
+
     if (usrProgress < 0 || usrProgress > 1) {
-      msg.channel.send("Please supply a value between 0 and 1 for the progress");
+      msg.channel.send(
+        "Please supply a value between 0 and 1 for the progress"
+      );
       return;
     }
-    
+
     await docRef.set({
       username: `${usrname}`,
-      level: (userInfo[1] && !isNaN(usrLevel) ? usrLevel : 0),
-      progress: (userInfo[2] && !isNaN(usrProgress) ? usrProgress : 0.0)
+      level: userInfo[1] && !isNaN(usrLevel) ? usrLevel : 0,
+      progress: userInfo[2] && !isNaN(usrProgress) ? usrProgress : 0.0
     });
 
     await docRef.set(
@@ -159,11 +167,13 @@ module.exports = async (Discord, client, DB) => {
   const updateUser = async (msg, username) => {};
 
   const deleteUser = async (msg, username) => {
-    const query = await DB.collection("users").where("username", "==", username.toLowerCase()).get();
+    const query = await DB.collection("users")
+      .where("username", "==", username.toLowerCase())
+      .get();
     const docRef = await DB.collection("users").doc(query.docs[0].data()._id);
-    
+
     await docRef.delete();
-    
+
     msg.channel.send(`User: ${username} deleted successfully!`);
   };
   // -------------------------------------------------------------------
@@ -174,14 +184,12 @@ module.exports = async (Discord, client, DB) => {
 
   client.on("message", async msg => {
     const msgSplit = msg.content.toLowerCase().split(" ");
-    
+
     if (msgSplit[0] !== BOT_PREFIX) {
       return;
     }
 
     switch (msgSplit[1]) {
-      case `info`:
-        break;
       case `userid`:
         await getID(msg, msgSplit[2]);
         break;
@@ -200,7 +208,7 @@ module.exports = async (Discord, client, DB) => {
       case `update`:
         break;
       case `delete`:
-        if ((await checkIfUserExists(msgSplit[2].toLowerCase()))) {
+        if (await checkIfUserExists(msgSplit[2].toLowerCase())) {
           msg.channel.send("User does not exist");
         } else {
           await deleteUser(msg, msgSplit[2]);
