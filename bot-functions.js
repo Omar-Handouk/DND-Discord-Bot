@@ -64,13 +64,13 @@ module.exports = async (Discord, client, DB) => {
     }
   };
 
-  const addUser = async (msg, username) => {
+  const addUser = async (msg, userInfo) => {
     const docRef = DB.collection("users").doc();
-
+    
     await docRef.set({
-      username: `${username.toLowerCase()}`,
-      level: 0,
-      progress: 0.0
+      username: `${userInfo[0].toLowerCase()}`,
+      level: (userInfo[1] && typeof userInfo[1] == "number" ? userInfo[1] : 0),
+      progress: (userInfo[2] && typeof userInfo[2] == "number" ? userInfo[2] : 0.0)
     });
 
     await docRef.set(
@@ -149,7 +149,7 @@ module.exports = async (Discord, client, DB) => {
 
   client.on("message", async msg => {
     const msgSplit = msg.content.toLowerCase().split(" ");
-
+    
     if (msgSplit[0] !== BOT_PREFIX) {
       return;
     }
@@ -166,7 +166,7 @@ module.exports = async (Discord, client, DB) => {
         } else if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
           msg.channel.send("User already exists");
         } else {
-          await addUser(msg, msgSplit[2]);
+          await addUser(msg, msgSplit.slice(2));
         }
 
         break;
