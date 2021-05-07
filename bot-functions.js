@@ -67,10 +67,37 @@ module.exports = async (Discord, client, DB) => {
   const addUser = async (msg, userInfo) => {
     const docRef = DB.collection("users").doc();
     
+    const usrname = userInfo[0].toLowerCase();
+    const usrLevel = parseInt(userInfo[1]);
+    const usrProgress = parseFloat(userInfo[2]);
+    
+    console.log(userInfo)
+    console.log(typeof usrLevel)
+    if (usrLevel === NaN) {
+      
+      msg.channel.send("Undefined level value, please supply a numerical value!");
+      return;
+    }
+    
+    if (usrLevel < 0) {
+      msg.channel.send("Level is below zero, please supply a positive number");
+      return;
+    }
+    
+    if (usrProgress === NaN) {
+      msg.channel.send("Undefined progress value, please supply a numerical value!");
+      return;
+    }
+    
+    if (usrProgress < 0 || usrProgress > 1) {
+      msg.channel.send("Please supply a value between 0 and 1 for the progress");
+      return;
+    }
+    
     await docRef.set({
-      username: `${userInfo[0].toLowerCase()}`,
-      level: (userInfo[1] && typeof userInfo[1] == "number" ? userInfo[1] : 0),
-      progress: (userInfo[2] && typeof userInfo[2] == "number" ? userInfo[2] : 0.0)
+      username: `${usrname}`,
+      level: (userInfo[1] && usrLevel !== NaN ? usrLevel : 0),
+      progress: (userInfo[2] && usrProgress !== NaN ? usrProgress : 0.0)
     });
 
     await docRef.set(
