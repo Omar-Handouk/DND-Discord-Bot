@@ -39,15 +39,7 @@ module.exports = (Discord, client, DB) => {
         break;
       case `delete`:
         break;
-      case `help`:
-        const x = "Dungeons and Dragons Bot Commands\n-------------------------------\n"
-          + "To use the bot pleaase prefix the commands with \"-DND\"\n"
-          + "help: Used to show the bots available commands\n"
-          + "info: Shows all the information for all current users available in the database\n"
-          + "add [username]: Adds a new user to the database"
-          + "update [username] [fieldType] [value]: Update the value of a certain attribute for a user, available attributes are (level-progression)\n"
-          + "delete [username]: Deletes a certain user from the database";
-        
+      case `help`:        
         const help = new Discord.MessageEmbed();
         
         help
@@ -58,8 +50,8 @@ module.exports = (Discord, client, DB) => {
             {name: "help", value: "Used to show the bots available commands"},
             {name: "info", value: "Shows all the information for all current users available in the database"},
             {name: "add [username]", value: "Adds a new user to the database"},
-            {name: "", value: ""},
-            {name: "", value: ""},
+            {name: "update [username] [field type] [value]", value: "Update the value of a certain attribute for a user.\nAvailable field types:\n  - level\n-  progress"},
+            {name: "delete [username]", value: "Deletes a certain user from the database"},
           )
         
         msg.channel.send(help);
@@ -69,3 +61,5 @@ module.exports = (Discord, client, DB) => {
     }
   });
 };
+
+asy
