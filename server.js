@@ -2,7 +2,6 @@ const Discord = require("discord.js");
 const admin = require("firebase-admin");
 
 const firebaseAuth = require("./dnd-discord-bot-67e23-firebase-adminsdk-k3ovz-aeffae9d74.json");
-console.log(firebaseAuth);
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseAuth),
@@ -31,6 +30,7 @@ client.on("ready", () => {
 client.on("message", async msg => {
   const msgSplit = msg.content.toLowerCase().split(" ");
   
+  console.log(msgSplit)
   if (msgSplit[0] !== BOT_PREFIX) {
     return;
   }
@@ -39,11 +39,13 @@ client.on("message", async msg => {
     case `db`:
       break;
     case `add`:
+      console.log('here')
       const docRef = DB.collection('users').doc();
-      console.log(docRef)
       let a = await docRef.set({
-        "username": "hamda"
+        "username": `${msgSplit[2]}`
       })
+      console.log(a)
+      
       break;
     case `update`:
       break;
