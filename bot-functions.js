@@ -11,7 +11,7 @@ const BOT_PREFIX = "-dnd";
 
 module.exports = async (Discord, client, DB) => {
   const checkIfUserExists = async username => {
-    let query = DB.collections("users").where("username", "==", username);
+    let query = DB.collection("users").where("username", "==", username);
 
     let snapshot = await query.get();
 
@@ -34,19 +34,19 @@ module.exports = async (Discord, client, DB) => {
         break;
       case `add`:
         
-        if (!(await checkIfUserExists(msgSplit[2]))) {
+        if (!(await checkIfUserExists(msgSplit[2].toLowerCase()))) {
           msg.channel.send("User already exists");
         } else {
           const docRef = DB.collection("users").doc();
 
           await docRef.set({
-            username: `${msgSplit[2]}`,
+            username: `${msgSplit[2].toLowerCase()}`,
             level: 0,
             progress: 0.0
           });
           
           
-          msg.channel.send(``);
+          msg.channel.send(`User has been added successfully, User ID: ${docRef.id}`);
         }
         break;
       case `update`:
