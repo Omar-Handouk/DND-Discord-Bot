@@ -4,7 +4,8 @@
   "description": "A simple Node app built on fastify, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "restart": "nodemon server.js"
   },
   "dependencies": {
     "discord.js": "^12.5.2"
