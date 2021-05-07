@@ -71,9 +71,7 @@ module.exports = async (Discord, client, DB) => {
     const usrLevel = parseInt(userInfo[1]);
     const usrProgress = parseFloat(userInfo[2]);
     
-    console.log(userInfo)
-    console.log(typeof usrLevel)
-    if (usrLevel === NaN) {
+    if (isNaN(usrLevel)) {
       
       msg.channel.send("Undefined level value, please supply a numerical value!");
       return;
@@ -84,8 +82,8 @@ module.exports = async (Discord, client, DB) => {
       return;
     }
     
-    if (usrProgress === NaN) {
-      msg.channel.send("Undefined progress value, please supply a numerical value!");
+    if (isNaN(usrProgress)) {
+      msg.channel.send("Undefined progress value, please supply a numerical value between 0 and 1!");
       return;
     }
     
@@ -96,8 +94,8 @@ module.exports = async (Discord, client, DB) => {
     
     await docRef.set({
       username: `${usrname}`,
-      level: (userInfo[1] && usrLevel !== NaN ? usrLevel : 0),
-      progress: (userInfo[2] && usrProgress !== NaN ? usrProgress : 0.0)
+      level: (userInfo[1] && !isNaN(usrLevel) ? usrLevel : 0),
+      progress: (userInfo[2] && !isNaN(usrProgress) ? usrProgress : 0.0)
     });
 
     await docRef.set(
