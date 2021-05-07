@@ -40,13 +40,13 @@ client.on("message", async msg => {
       break;
     case `add`:
       console.log('here')
-      const collectionRef = DB.collection('users')
+      const docRef = DB.collection('users').doc()
       
-      const a = await collectionRef.add({
+      const a = await docRef.set({
         username: `${msgSplit[2]}`
       })
       
-      msg.channel.send(a.id)
+      msg.channel.send(docRef.id)
       
       break;
     case `update`:
