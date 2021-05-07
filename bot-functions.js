@@ -135,8 +135,8 @@ module.exports = async (Discord, client, DB) => {
 
   const deleteUser = async (msg, username) => {
     const query = await DB.collection("users").where("username", "==", username.toLowerCase()).get();
-    const docRef = query.docs[0];
-    console.log(typeof docRef);
+    const docRef = await DB.collection("users").doc(query.docs[0].data()._id);
+    
     await docRef.delete();
     
     msg.channel.send(`User: ${username} deleted successfully!`);
@@ -173,7 +173,11 @@ module.exports = async (Discord, client, DB) => {
       case `update`:
         break;
       case `delete`:
-        await deleteUser(msg, msgSplit[2]);
+        if ((await checkIfUserExists(msgSplit[2].toLowerCase()))) {
+          msg.channel.send("User does not exist");
+        } else {
+          await deleteUser(msg, msgSplit[2]);
+        }
         break;
       case `help`:
         await showHelp(msg);
