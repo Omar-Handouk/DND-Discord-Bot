@@ -54,11 +54,13 @@ module.exports = async (Discord, client, DB) => {
   const getID = async (msg, username) => {
     const collectionRef = DB.collection("users");
     
-    const querySnapshot = await collectionRef.where("username", "==", username.toLowerCase()).get();
+    const query = await collectionRef.where("username", "==", username.toLowerCase()).get();
     
-    querySnapshot.forEach(documentSnapshot => {
-      console.log(documentSnapshot.);
-    })
+    if (query.empty) {
+      msg.channel.send("Username not found!");
+    } else {
+      msg.channel.send(`The ID of username ${username}: ${query.docs[0].data()._id}`)
+    }
   };
   
   const addUser = async (msg, username) => {
@@ -69,7 +71,11 @@ module.exports = async (Discord, client, DB) => {
             level: 0,
             progress: 0.0
           });
-
+    
+          await docRef.set({
+            _id: docRef.id
+          }, {merge: true});
+    
           msg.channel.send(
             `User has been added successfully, User ID: ${docRef.id}`
           );
@@ -77,11 +83,13 @@ module.exports = async (Discord, client, DB) => {
   
   const getAllUser = async (msg) => {};
   
-  const getUser = async (msg, user) => {};
+  const getUser = async (msg, user, isUserID) => {
+    const doc 
+  };
   
-  const updateUser = async (msg, user) => {};
+  const updateUser = async (msg, user, isUserID) => {};
   
-  const deleteUser = async (msg, user) => {};
+  const deleteUser = async (msg, user, isUserID) => {};
   // -------------------------------------------------------------------
 
   client.on("ready", () => {
