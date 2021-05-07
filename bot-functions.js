@@ -191,7 +191,11 @@ module.exports = async (Discord, client, DB) => {
 
     switch (msgSplit[1]) {
       case `userid`:
-        await getID(msg, msgSplit[2]);
+        if (!msgSplit[2]) {
+          msg.channel.send("You must pass a username!");
+        } else {
+          await getID(msg, msgSplit[2]);
+        }
         break;
       case `add`:
         if (!msgSplit[2]) {
@@ -201,14 +205,28 @@ module.exports = async (Discord, client, DB) => {
         } else {
           await addUser(msg, msgSplit.slice(2));
         }
-
         break;
       case `getuser`:
-        await getUser(msg, msgSplit[2]);
+        if (!msgSplit[2]) {
+          msg.channel.send("You must pass a username!");
+        } else {
+          await getUser(msg, msgSplit[2]);
+        }
       case `update`:
+        if (!msgSplit[2]) {
+          msg.channel.send("You must pass a username!");
+        } else if ((await checkIfUserExists(msgSplit[2].toLowerCase()))) {
+          msg.channel.send("User does not exist");
+        }
+        
+        if (msgSplit[3].toLowerCase() !== 'level' || msgSplit[3].toLowerCase() !== 'progress') {
+          msg.channel.send("Invalid field type");
+        } else if (ms)
         break;
       case `delete`:
-        if (await checkIfUserExists(msgSplit[2].toLowerCase())) {
+        if (!msgSplit[2]) {
+          msg.channel.send("You must pass a username!");
+        } else if (await checkIfUserExists(msgSplit[2].toLowerCase())) {
           msg.channel.send("User does not exist");
         } else {
           await deleteUser(msg, msgSplit[2]);
