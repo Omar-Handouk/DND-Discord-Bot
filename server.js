@@ -2,14 +2,14 @@ const Discord = require("discord.js");
 const admin = require("firebase-admin");
 
 const firebaseAuth = require("./dnd-discord-bot-67e23-firebase-adminsdk-k3ovz-aeffae9d74.json");
+console.log(firebaseAuth);
 
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(firebaseAuth),
-  databaseURL: 'https://dnd-discord-bot-67e23.firebaseio.com'
+  credential: admin.credential.cert(firebaseAuth),
 });
 
 
-const firebaseDB = admin.firestore();
+const DB = admin.firestore();
 
 
 
@@ -28,7 +28,7 @@ client.on("ready", () => {
 * Delete a user
 */
 
-client.on("message", msg => {
+client.on("message", async msg => {
   const msgSplit = msg.content.toLowerCase().split(" ");
   
   if (msgSplit[0] !== BOT_PREFIX) {
@@ -39,6 +39,11 @@ client.on("message", msg => {
     case `db`:
       break;
     case `add`:
+      const docRef = DB.collection('users').doc();
+      console.log(docRef)
+      let a = await docRef.set({
+        "username": "hamda"
+      })
       break;
     case `update`:
       break;
