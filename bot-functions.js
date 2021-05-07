@@ -131,9 +131,16 @@ module.exports = async (Discord, client, DB) => {
     }
   };
 
-  const updateUser = async (msg, user) => {};
+  const updateUser = async (msg, username) => {};
 
-  const deleteUser = async (msg, user) => {};
+  const deleteUser = async (msg, username) => {
+    const query = await DB.collection("users").where("username", "==", username.toLowerCase()).get();
+    const docRef = query.docs[0];
+    console.log(typeof docRef);
+    await docRef.delete();
+    
+    msg.channel.send(`User: ${username} deleted successfully!`);
+  };
   // -------------------------------------------------------------------
 
   client.on("ready", () => {
@@ -166,6 +173,7 @@ module.exports = async (Discord, client, DB) => {
       case `update`:
         break;
       case `delete`:
+        await deleteUser(msg, msgSplit[2]);
         break;
       case `help`:
         await showHelp(msg);
