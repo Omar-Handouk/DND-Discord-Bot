@@ -1,6 +1,18 @@
 const Discord = require("discord.js");
 const admin = require("firebase-admin");
 
+const firebaseAuth = require("./dnd-discord-bot-67e23-firebase-adminsdk-k3ovz-aeffae9d74.json");
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(firebaseAuth),
+  databaseURL: 'https://dnd-discord-bot-67e23.firebaseio.com'
+});
+
+
+const firebaseDB = admin.firestore();
+
+
+
 const client = new Discord.Client();
 
 const BOT_PREFIX = "-dnd";
