@@ -9,7 +9,7 @@ const BOT_PREFIX = "-dnd";
  * Delete a user
  */
 
-module.exports = (client, DB) => {
+module.exports = (Discord, client, DB) => {
   client.on("ready", () => {
     console.info("Bot is online!");
   });
@@ -40,11 +40,30 @@ module.exports = (client, DB) => {
       case `delete`:
         break;
       case `help`:
-        const help = "Dungeons and Dragons Bot Commands\n-------------------------------"
+        const x = "Dungeons and Dragons Bot Commands\n-------------------------------\n"
           + "To use the bot pleaase prefix the commands with \"-DND\"\n"
           + "help: Used to show the bots available commands\n"
           + "info: Shows all the information for all current users available in the database\n"
-          + "add [username]: Adds";
+          + "add [username]: Adds a new user to the database"
+          + "update [username] [fieldType] [value]: Update the value of a certain attribute for a user, available attributes are (level-progression)\n"
+          + "delete [username]: Deletes a certain user from the database";
+        
+        const help = new Discord.MessageEmbed();
+        
+        help
+          .setColor("#0099ff")
+          .setTitle("Dungeons And Dragons Bot Help")
+          .setDescription("To use the bot pleaase prefix the commands with \"-DND\"")
+          .addFields(
+            {name: "help", value: "Used to show the bots available commands"},
+            {name: "info", value: "Shows all the information for all current users available in the database"},
+            {name: "add [username]", value: "Adds a new user to the database"},
+            {name: "", value: ""},
+            {name: "", value: ""},
+          )
+        
+        msg.channel.send(help);
+        break;
       default:
         msg.channel.send("In-correct command, please use a valid one!");
     }

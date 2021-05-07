@@ -13,6 +13,6 @@ admin.initializeApp({
 const client = new Discord.Client();
 const DB = admin.firestore();
 
-botFunctions(client, DB);
+botFunctions(Discord, client, DB);
 
 client.login(process.env.DISCORD_TOKEN);
