@@ -221,7 +221,10 @@ module.exports = async (Discord, client, DB) => {
         
         if (msgSplit[3].toLowerCase() !== 'level' || msgSplit[3].toLowerCase() !== 'progress') {
           msg.channel.send("Invalid field type");
-        } else if (msgSplit[3].toLowerCase() === 'level' && isNaN(msgSplit[4]) || msgSplit[3].toLowerCase() === 'progress' && isNaN(msgSplit[4])) {
+        } else if (msgSplit[3].toLowerCase() === 'level' && isNaN(parseInt(msgSplit[4])) 
+                   || true
+                   || msgSplit[3].toLowerCase() === 'progress' && isNaN(parseFloat(msgSplit[4])) 
+                   || true ) {
           msg.channel.send("Please enter a valid numerical value!");
         }
         break;
