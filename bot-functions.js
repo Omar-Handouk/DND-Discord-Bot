@@ -17,16 +17,12 @@ module.exports = async (Discord, client, DB) => {
     help
       .setColor("#0099ff")
       .setTitle("Dungeons And Dragons Bot Help")
-      .setDescription('To use the bot pleaase prefix the commands with "-DND"')
+      .setDescription('To use the bot pleaase prefix the commands with "-DND"\n\n**Neo was here!**')
       .addFields(
         { name: "help", value: "Used to show the bots available commands" },
         {
           name: "getuser [username]",
           value: "Displays all information for a given username"
-        },
-        {
-          name: "userid [username]",
-          value: "Retrieves the user id for a given username"
         },
         {
           name: "add [username]",
@@ -35,7 +31,7 @@ module.exports = async (Discord, client, DB) => {
         {
           name: "update [username] [field type] [value]",
           value:
-            "Update the value of a certain attribute for a user.\nAvailable field types:\n  - level\n-  progress"
+            "Update the value of a certain attribute for a user.\nAvailable field types:\n  - level\n-  progress\n\n**Each value is updated one at a time**\n**Example: -dnd update Neo level 140**"
         },
         {
           name: "delete [username]",
@@ -212,11 +208,11 @@ module.exports = async (Discord, client, DB) => {
 
     switch (msgSplit[1]) {
       case `userid`:
-        if (!msgSplit[2]) {
+        /*if (!msgSplit[2]) {
           msg.channel.send("You must pass a username!");
         } else {
           await getID(msg, msgSplit[2]);
-        }
+        }*/
         break;
       case `add`:
         if (!msgSplit[2]) {
