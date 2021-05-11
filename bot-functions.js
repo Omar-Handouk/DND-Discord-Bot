@@ -165,7 +165,7 @@ module.exports = async (Discord, client, DB) => {
   };
 
   const updateUser = async (msg, username, field, fieldVal) => {
-    const collectionRef = DB.collection("users");;
+    const collectionRef = DB.collection("users");
     
     const query = await collectionRef.where("username", "==", username.toLowerCase()).get();
     
@@ -173,7 +173,17 @@ module.exports = async (Discord, client, DB) => {
       msg.channel.send("Username not found!");
       return Promise.resolve({ found: false});
     } else {
-      const parsedFieldValue = field.toLowerCase() ===
+      const parsedFieldValue = field.toLowerCase() === 'level' ? parseInt(fieldVal) : parseFloat(fieldVal);
+      
+      const docRef = DB.collection("users").doc(query.docs[0].data()._id);
+      
+      if (field.toLowerCase() === 'level') {
+        await docRef.set({level: parsedFieldValue}, {merge: true});
+        msg.channel.send(`Successfully updated level to ${parsedFieldValue} for user ${username.toLowerCase()}`);
+      } else {
+        await docRef.set({progress: parsedFieldValue}, {merge: true});
+        msg.channel.send(`Successfully updated progress to ${parsedFieldValue} for user ${username.toLowerCase()}`);
+      }
     }
   };
 
