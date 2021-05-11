@@ -164,7 +164,18 @@ module.exports = async (Discord, client, DB) => {
     }
   };
 
-  const updateUser = async (msg, username) => {};
+  const updateUser = async (msg, username, field, fieldVal) => {
+    const collectionRef = DB.collection("users");;
+    
+    const query = await collectionRef.where("username", "==", username.toLowerCase()).get();
+    
+    if (query.empty) {
+      msg.channel.send("Username not found!");
+      return Promise.resolve({ found: false});
+    } else {
+      const parsedFieldValue = field.toLowerCase() ===
+    }
+  };
 
   const deleteUser = async (msg, username) => {
     const query = await DB.collection("users")
@@ -219,13 +230,15 @@ module.exports = async (Discord, client, DB) => {
           msg.channel.send("User does not exist");
         }
         
-        if (msgSplit[3].toLowerCase() !== 'level' || msgSplit[3].toLowerCase() !== 'progress') {
+        if (msgSplit[3].toLowerCase() !== 'level' && msgSplit[3].toLowerCase() !== 'progress') {
           msg.channel.send("Invalid field type");
         } else if (msgSplit[3].toLowerCase() === 'level' && isNaN(parseInt(msgSplit[4])) 
-                   || true
-                   || msgSplit[3].toLowerCase() === 'progress' && isNaN(parseFloat(msgSplit[4])) 
-                   || true ) {
-          msg.channel.send("Please enter a valid numerical value!");
+                   || msgSplit[3].toLowerCase() === 'level' && parseInt(msgSplit[4]) < 0
+                   || msgSplit[3].toLowerCase() === 'progress' && isNaN(parseFloat(msgSplit[4]))
+                   || msgSplit[3].toLowerCase() === 'progress' && (parseFloat(msgSplit[4]) < 0 || parseFloat(msgSplit[4]) > 1)) {
+          msg.channel.send("Please enter a valid numerical value!, level: 0-infinity, progress: 0-1");
+        } else {
+          await updateUser(msg, msgSplit[2], msgSplit[3], msgSplit[4]);
         }
         break;
       case `delete`:
