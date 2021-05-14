@@ -17,7 +17,7 @@ module.exports = async (Discord, client, DB) => {
     help
       .setColor("#0099ff")
       .setTitle("Dungeons And Dragons Bot Help")
-      .setDescription('To use the bot pleaase prefix the commands with "-DND"\n\n**Neo was here!**')
+      .setDescription('To use the bot please prefix the commands with "-DND"')
       .addFields(
         { name: "help", value: "Used to show the bots available commands" },
         {
@@ -36,6 +36,10 @@ module.exports = async (Discord, client, DB) => {
         {
           name: "delete [username]",
           value: "Deletes a certain user from the database"
+        },
+        {
+          name: "Credits",
+          value: "Made by Neo and Vaxeon"
         }
       );
 
