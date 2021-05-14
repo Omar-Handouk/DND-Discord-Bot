@@ -2,7 +2,7 @@
 
 const Discord = require("discord.js");
 const admin = require("firebase-admin");
-const botFunctions = require('./bot-functions');
+const botFunctions = require('./bot-functions-rework');
 
 const firebaseAuth = require("./dnd-discord-bot-67e23-firebase-adminsdk-k3ovz-aeffae9d74.json");
 
