@@ -1,4 +1,7 @@
 "use strict";
+
+const TinyURL = require('tinyurl');
+
 const BOT_PREFIX = "-dnd";
 
 module.exports = async (Discord, client, DB) => {
@@ -28,14 +31,17 @@ module.exports = async (Discord, client, DB) => {
           name: "getuser [username]",
           value: "Displays all information for a given username"
         },
-
+        {
+          name: "showall",
+          value: "Return a table with all users information"
+        },
         {
           name: "delete [username]",
           value: "Deletes a certain user from the database"
         },
         {
           name: "Credits",
-          value: "Made by Neo and Vaxeon"
+          value: "Developed by Neo and Vaxeon"
         }
       );
 
@@ -248,6 +254,13 @@ module.exports = async (Discord, client, DB) => {
         } else {
           await getUser(msg, msgSplit[2]);
         }
+        break;
+      case `showall`:
+        msg.channel.send("Generating table, please wait for a few seconds.");
+        
+        const tinyTable = await TinyURL.shorten(await require('./csv-to-table.js')(DB));
+        msg.channel.send(`User table: ${tinyTable}`);
+        
         break;
       case `update`:
         if (!msgSplit[2]) {

@@ -15,4 +15,6 @@ const DB = admin.firestore();
 
 botFunctions(Discord, client, DB);
 
+// require('./csv-to-table')(DB);
+
 client.login(process.env.DISCORD_TOKEN);
