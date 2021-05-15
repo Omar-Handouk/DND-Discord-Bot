@@ -1,21 +1,9 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/node,yarn,linux
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,yarn,linux
+# Created by https://www.toptal.com/developers/gitignore/api/node,yarn,dotenv
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,yarn,dotenv
 
-### Linux ###
-*~
-
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
+### dotenv ###
+.env
 
 ### Node ###
 # Logs
@@ -92,7 +80,6 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 .env*.local
 
@@ -159,4 +146,4 @@ temp/
 # and uncomment the following lines
 # .pnp.*
 
-# End of https://www.toptal.com/developers/gitignore/api/node,yarn,linux
+# End of https://www.toptal.com/developers/gitignore/api/node,yarn,dotenv

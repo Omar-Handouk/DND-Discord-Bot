@@ -1,31 +1,25 @@
-"use strict";
-
 const fs = require("fs");
 const CloudConvert = require("cloudconvert");
 const parse = require("json2csv").parse;
+const TinyURL = require("tinyurl");
+const TS = require("./utils/timestamp");
 
-const cloudConvert = new CloudConvert(process.env.CONVERT_CLOUD_API);
+const cloudConvert = new CloudConvert(process.env.CLOUD_CONVERT_API_KEY);
 
-module.exports = async DB => {
-  const exportUsersToCSV = async () => {
-    const query = await DB.collection("users")
-      .orderBy("username", "asc")
-      .get();
-
-    let users = [];
-    const fields = ["_id", "username", "level", "token"];
+module.exports = async (users) => {
+  const exportCSV = async () => {
+    const fields = ["id", "username", "level", "token"];
     const opts = { fields };
-
-    query.forEach(user => users.push(user.data()));
 
     let csv = null;
     try {
       csv = parse(users, opts);
     } catch (e) {
-      console.error(e);
+      console.error(`[${TS()}][error] CSV table generation faliure`);
+      return Promise.reject(e);
     }
 
-    fs.writeFileSync("./users.csv", csv, { encoding: "utf8", flag: "w" });
+    fs.writeFileSync("../users.csv", csv, { encoding: "utf8", flag: "w" });
   };
 
   const generateTable = async () => {
@@ -33,7 +27,7 @@ module.exports = async DB => {
       tasks: {
         "import-csv": {
           operation: "import/base64",
-          file: fs.readFileSync("./users.csv", {
+          file: fs.readFileSync("../users.csv", {
             encoding: "base64",
             flag: "r"
           }),
@@ -59,7 +53,7 @@ module.exports = async DB => {
     job = await cloudConvert.jobs.wait(job.id);
 
     const exportTask = job.tasks.filter(
-      task => task.operation === "export/url" && task.status === "finished"
+      (task) => task.operation === "export/url" && task.status === "finished"
     )[0];
 
     const file = exportTask.result.files[0];
@@ -67,7 +61,9 @@ module.exports = async DB => {
     return Promise.resolve(file.url);
   };
 
-  await exportUsersToCSV();
-  
-  return Promise.resolve(await generateTable());
+  await exportCSV();
+
+  const shortenedUrl = TinyURL.shorten(await generateTable());
+
+  return Promise.resolve(shortenedUrl);
 };
